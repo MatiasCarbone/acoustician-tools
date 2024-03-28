@@ -10,7 +10,7 @@ import numpy as np
 SOUNDSPEED = 343.0  # m/s @ 20°C dry air
 
 
-def t60_sabine(volume, surfaces, alphas, c=SOUNDSPEED):
+def t60_sabine(volume: float, surfaces: list[float], alphas: list[float], c: float = SOUNDSPEED) -> float:
     """
     Calculate theoretical reverberation time using Sabine's equation.
 
@@ -22,6 +22,7 @@ def t60_sabine(volume, surfaces, alphas, c=SOUNDSPEED):
     Returns:
         t60: Reverberation time in seconds. Amount of time required for a decay of 60dB
     """
+
     total_surface = np.sum(surfaces)
     mean_alpha = np.average(alphas, weights=surfaces)
 
