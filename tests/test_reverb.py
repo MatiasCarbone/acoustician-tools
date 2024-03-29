@@ -56,7 +56,7 @@ class TestRoom(unittest.TestCase):
         # Single band
         expected = 0.17
         self.assertAlmostEqual(
-            t60_eyring(self.volume, self.surfaces, self.alpha),
+            rt_eyring(self.volume, self.surfaces, self.alpha),
             expected,
             places=2,
         )
@@ -64,7 +64,7 @@ class TestRoom(unittest.TestCase):
         # Multiple bands
         expected = np.asarray([0.38, 0.17, 0.11])
         np.testing.assert_almost_equal(
-            t60_eyring(self.volume, self.surfaces, self.alpha_multiband),
+            rt_eyring(self.volume, self.surfaces, self.alpha_multiband),
             expected,
             decimal=2,
         )
