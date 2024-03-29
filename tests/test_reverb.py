@@ -39,7 +39,7 @@ class TestRoom(unittest.TestCase):
         # Single band
         expected = 0.21
         self.assertAlmostEqual(
-            t60_sabine(self.volume, self.surfaces, self.alpha),
+            rt_sabine(self.volume, self.surfaces, self.alpha),
             expected,
             places=2,
         )
@@ -47,7 +47,7 @@ class TestRoom(unittest.TestCase):
         # Multiple bands
         expected = np.asarray([0.42, 0.21, 0.15])
         np.testing.assert_almost_equal(
-            t60_sabine(self.volume, self.surfaces, self.alpha_multiband),
+            rt_sabine(self.volume, self.surfaces, self.alpha_multiband),
             expected,
             decimal=2,
         )
