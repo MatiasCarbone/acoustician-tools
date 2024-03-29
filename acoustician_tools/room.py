@@ -70,3 +70,22 @@ def t60_eyring(volume: float, surfaces: list, alphas: list, c: float = SOUNDSPEE
     mean_alpha = np.average(alphas, axis=-1, weights=surfaces)
     t60 = 0.161 * volume / (-total_surface * np.log(1 - mean_alpha))
     return t60
+
+
+def t60_millington(volume: float, surfaces: list, alphas: list, c: float = SOUNDSPEED) -> float | list:
+    """
+    Calculate theoretical reverberation time using Millington-Sette equation for one or more frequency bands.
+
+    Parameters:
+        volume (float): Total volume of the room [m3]
+        surfaces (list of floats): Surface area of each boundary [m2]
+        alphas (1d or 2d list of floats): Absortion coefficient for each boundary; [0-1]
+            first dimension corresponds to boundary and second dimension to alpha
+
+    Returns:
+        t60 (float or list): Reverberation time in seconds. Amount of time required for a decay of 60dB
+            for one at one or more frequency bands.
+    """
+    sigma = -np.sum(surfaces * np.log(1 - alphas), axis=-1)
+    t60 = 0.161 * volume / sigma
+    return t60

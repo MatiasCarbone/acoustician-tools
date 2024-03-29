@@ -59,6 +59,23 @@ class TestRoom(unittest.TestCase):
             decimal=2,
         )
 
+    def test_millington(self):
+        # Single band
+        expected = 0.156
+        self.assertAlmostEqual(
+            t60_millington(self.volume, self.surfaces, self.alpha),
+            expected,
+            places=2,
+        )
+
+        # Multiple bands
+        expected = np.asarray([0.38, 0.156, 0.11])
+        np.testing.assert_almost_equal(
+            t60_millington(self.volume, self.surfaces, self.alpha_multiband),
+            expected,
+            decimal=2,
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
