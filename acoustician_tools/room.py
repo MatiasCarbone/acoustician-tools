@@ -137,10 +137,26 @@ def rt_millington(volume: float, surfaces: list, alphas: list, decay: int = 60, 
 
 
 def rt_fitzroy(volume: float, surfaces: list, alphas: list, decay: int = 60, c: float = 343.0) -> float | list:
+    """
+    Calculate theoretical reverberation time using Fitzroy equation for one or more frequency bands.
+
+    Parameters:
+        volume (float): Total volume of the room [m3]
+        surfaces (list of floats): Surface area of each boundary [m2]
+        alphas (1d or 2d list of floats): Absortion coefficient for each boundary; [0-1]
+            first dimension corresponds to boundary and second dimension to alpha
+        decay (int): intensity drop for computing reverberation time [dB]
+            ex: 60 for RT60, 30 for RT30...
+        c (float): speed of sound [m/s]
+
+    Returns:
+        rt (float or list): Reverberation time. Amount of time required for a decay [s]
+            of specified amount of dB at one or more frequency bands.
+    """
+
     constant = rt_constant(c, decay)
 
     x, y, z = np.sum(surfaces[0:2]), np.sum(surfaces[2:4]), np.sum(surfaces[4:6])
-
     alpha_x = alphas.transpose()[0:2].sum(axis=0) / 2
     alpha_y = alphas.transpose()[2:4].sum(axis=0) / 2
     alpha_z = alphas.transpose()[4:6].sum(axis=0) / 2
