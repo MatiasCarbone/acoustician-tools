@@ -86,6 +86,14 @@ class TestRoom(unittest.TestCase):
             decimal=2,
         )
 
+    def test_fitzroy(self):
+        expected = np.asarray([0.48, 0.21, 0.13])
+        np.testing.assert_almost_equal(
+            rt_fitzroy(self.volume, self.surfaces, self.alpha_multiband),
+            expected,
+            decimal=2,
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

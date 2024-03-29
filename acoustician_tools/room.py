@@ -134,3 +134,20 @@ def rt_millington(volume: float, surfaces: list, alphas: list, decay: int = 60, 
     constant = rt_constant(c, decay)
     rt = constant * volume / sigma
     return rt
+
+
+def rt_fitzroy(volume: float, surfaces: list, alphas: list, decay: int = 60, c: float = 343.0) -> float | list:
+    constant = rt_constant(c, decay)
+
+    x, y, z = np.sum(surfaces[0:2]), np.sum(surfaces[2:4]), np.sum(surfaces[4:6])
+
+    alpha_x = alphas.transpose()[0:2].sum(axis=0) / 2
+    alpha_y = alphas.transpose()[2:4].sum(axis=0) / 2
+    alpha_z = alphas.transpose()[4:6].sum(axis=0) / 2
+
+    rt = (
+        constant
+        * (volume / np.sum(surfaces) ** 2)
+        * ((-x / np.log(1 - alpha_x)) + (-y / np.log(1 - alpha_y)) + (-z / np.log(1 - alpha_z)))
+    )
+    return rt
