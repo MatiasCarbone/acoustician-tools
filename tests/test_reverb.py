@@ -73,7 +73,7 @@ class TestRoom(unittest.TestCase):
         # Single band
         expected = 0.156
         self.assertAlmostEqual(
-            t60_millington(self.volume, self.surfaces, self.alpha),
+            rt_millington(self.volume, self.surfaces, self.alpha),
             expected,
             places=2,
         )
@@ -81,7 +81,7 @@ class TestRoom(unittest.TestCase):
         # Multiple bands
         expected = np.asarray([0.38, 0.156, 0.11])
         np.testing.assert_almost_equal(
-            t60_millington(self.volume, self.surfaces, self.alpha_multiband),
+            rt_millington(self.volume, self.surfaces, self.alpha_multiband),
             expected,
             decimal=2,
         )

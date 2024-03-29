@@ -113,7 +113,7 @@ def rt_eyring(volume: float, surfaces: list, alphas: list, decay: int = 60, c: f
     return rt
 
 
-def t60_millington(volume: float, surfaces: list, alphas: list) -> float | list:
+def rt_millington(volume: float, surfaces: list, alphas: list, decay: int = 60, c: float = 343.0) -> float | list:
     """
     Calculate theoretical reverberation time using Millington-Sette equation for one or more frequency bands.
 
@@ -122,11 +122,15 @@ def t60_millington(volume: float, surfaces: list, alphas: list) -> float | list:
         surfaces (list of floats): Surface area of each boundary [m2]
         alphas (1d or 2d list of floats): Absortion coefficient for each boundary; [0-1]
             first dimension corresponds to boundary and second dimension to alpha
+        decay (int): intensity drop for computing reverberation time [dB]
+            ex: 60 for RT60, 30 for RT30...
+        c (float): speed of sound [m/s]
 
     Returns:
-        t60 (float or list): Reverberation time in seconds. Amount of time required for a decay of 60dB
-            for one at one or more frequency bands.
+        rt (float or list): Reverberation time. Amount of time required for a decay [s]
+            of specified amount of dB at one or more frequency bands.
     """
     sigma = -np.sum(surfaces * np.log(1 - alphas), axis=-1)
-    t60 = 0.161 * volume / sigma
-    return t60
+    constant = rt_constant(c, decay)
+    rt = constant * volume / sigma
+    return rt
