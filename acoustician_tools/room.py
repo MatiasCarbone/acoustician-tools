@@ -134,3 +134,37 @@ def rt_fitzroy(volume: float, surfaces: list, alphas: list, decay: int = 60, c: 
         * ((-x / np.log(1 - alpha_x)) + (-y / np.log(1 - alpha_y)) + (-z / np.log(1 - alpha_z)))
     )
     return rt
+
+
+def rt_arau(volume: float, surfaces: list, alphas: list, decay: int = 60, c: float = 343.0) -> float | list:
+    """
+    Calculate theoretical reverberation time using Arau-Puchades equation for one or more frequency bands.
+
+    Parameters:
+        volume (float): Total volume of the room [m3]
+        surfaces (list of floats): Surface area of each boundary [m2]
+        alphas (1d or 2d list of floats): Absortion coefficient for each boundary; [0-1]
+            first dimension corresponds to boundary and second dimension to alpha
+        decay (int): intensity drop for computing reverberation time [dB]
+            ex: 60 for RT60, 30 for RT30...
+        c (float): speed of sound [m/s]
+
+    Returns:
+        rt (float or list): Reverberation time. Amount of time required for a decay [s]
+            of specified amount of dB at one or more frequency bands.
+    """
+    constant = rt_constant(c, decay)
+
+    s_tot = np.sum(surfaces)
+    sx, sy, sz = np.sum(surfaces[0:2]), np.sum(surfaces[2:4]), np.sum(surfaces[4:6])
+
+    ax = np.average(alphas.transpose()[0:2], axis=0, weights=surfaces[0:2])
+    ay = np.average(alphas.transpose()[2:4], axis=0, weights=surfaces[2:4])
+    az = np.average(alphas.transpose()[4:6], axis=0, weights=surfaces[4:6])
+
+    x_term = ((constant * volume) / -(s_tot * np.log(1 - ax))) ** (sx / s_tot)
+    y_term = ((constant * volume) / -(s_tot * np.log(1 - ay))) ** (sy / s_tot)
+    z_term = ((constant * volume) / -(s_tot * np.log(1 - az))) ** (sz / s_tot)
+
+    rt = x_term * y_term * z_term
+    return rt

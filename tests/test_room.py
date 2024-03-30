@@ -91,6 +91,14 @@ class TestRoom(unittest.TestCase):
             decimal=2,
         )
 
+    def test_arau(self):
+        expected = np.asarray([0.42, 0.18, 0.12])
+        np.testing.assert_almost_equal(
+            rt_arau(self.volume, self.surfaces, self.alpha_multiband),
+            expected,
+            decimal=2,
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
