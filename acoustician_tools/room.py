@@ -28,26 +28,6 @@ def rt_constant(sound_speed: float = SOUNDSPEED, decay_db: int = 60) -> float:
     return constant
 
 
-def shoebox_surfaces(length: float, width: float, height: float) -> list:
-    """
-    Get list of each boundary's surface for a shoebox room with defined dimensions.
-
-    Parameters:
-        length (float): length of the room [m]
-        width (float): width of the room [m]
-        heigth (float): heigth of the room [m]
-
-    Returns:
-        surfaces (list of floats): list containig the surface of each wall [m2]
-    """
-    sidewalls = length * height
-    front_rear = width * height
-    roof_ceil = width * length
-
-    surfaces = [sidewalls, sidewalls, front_rear, front_rear, roof_ceil, roof_ceil]
-    return surfaces
-
-
 def rt_sabine(volume: float, surfaces: list, alphas: list, decay: int = 60, c: float = 343.0) -> float | list:
     """
     Calculate theoretical reverberation time using Sabine's equation for one or more frequency bands.

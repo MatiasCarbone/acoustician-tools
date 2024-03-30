@@ -24,12 +24,13 @@ class TestRoom(unittest.TestCase):
     def test_rt_constant(self):
         sound_speed = 343.0
         expected = 0.161
-        self.assertAlmostEqual(rt_constant(sound_speed, decay_db=60), expected, places=3)
+        self.assertAlmostEqual(
+            rt_constant(sound_speed, decay_db=60),
+            expected,
+            places=3,
+            msg='RT constant for c=343m/s is 0.161',
+        )
         pass
-
-    def test_shoebox_surfaces(self):
-        expected = [8, 8, 6, 6, 12, 12]
-        self.assertEqual(shoebox_surfaces(*self.dimensions), expected)
 
     def test_sabine(self):
         # Single band
