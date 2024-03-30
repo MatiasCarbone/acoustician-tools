@@ -9,6 +9,42 @@ import numpy as np
 import math
 
 
+def frequency_to_wavelength(frequency: float, c: float = 343.0, units: str = 'm') -> float:
+    """
+    Calculate wavelength of a given frequency.
+
+    Parameters:
+        frequency (float) [Hz]
+        c (float): speed of sound [m/s]
+        units (str): units to convert wavelength to [km, m, cm, mm]
+
+    Returns:
+        l (float): wavelength in selected unit [default: m]
+    """
+
+    conversion = {'km': 0.001, 'm': 1, 'cm': 100, 'mm': 1000}
+    l = c / frequency * conversion[units]
+    return l
+
+
+def wavelength_to_frequency(wavelength: float, c: float = 343.0, units: str = 'm') -> float:
+    """
+    Calculate frequency of a given wavelength.
+
+    Parameters:
+        l (float): wavelength in selected unit [default: m]
+        c (float): speed of sound [m/s]
+        units (str): units to convert wavelength to [km, m, cm, mm]
+
+    Returns:
+        frequency (float) [Hz]
+    """
+
+    conversion = {'km': 0.001, 'm': 1, 'cm': 100, 'mm': 1000}
+    f = c / wavelength * conversion[units]
+    return f
+
+
 def sound_speed(temperature: float = 20.0) -> float:
     """
     Calculate approximate speed of sound in dry air at a given temperature.

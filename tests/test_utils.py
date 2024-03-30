@@ -14,7 +14,7 @@ class TestUtils(unittest.TestCase):
             sound_speed(20.0),
             expected,
             places=1,
-            msg='Sound speed at 20.0 °C is approximately 343 m/s',
+            msg='Sound speed at 20.0 °C is approximately 343m/s',
         )
 
     def test_shoebox_surfaces(self):
@@ -23,4 +23,42 @@ class TestUtils(unittest.TestCase):
             shoebox_surfaces(4, 3, 2),
             expected,
             msg='The boundary-surfaces for a 4x3x2 room should be 8-8-6-6-12-12',
+        )
+
+    def test_wavelength(self):
+        arguments = [200, 343.0, 'm']
+        expected = 1.715
+
+        self.assertEqual(
+            frequency_to_wavelength(*arguments),
+            expected,
+            msg='Wavelength for a sound wave of 200Hz @ 343m/s is 1.715m',
+        )
+
+        arguments = [10000, 355.0, 'mm']
+        expected = 35.5
+
+        self.assertEqual(
+            frequency_to_wavelength(*arguments),
+            expected,
+            msg='Wavelength for a sound wave of 10000Hz @ 355m/s is 35.5mm',
+        )
+
+    def test_frequency(self):
+        arguments = [5, 343.0, 'm']
+        expected = 68.6
+
+        self.assertEqual(
+            wavelength_to_frequency(*arguments),
+            expected,
+            msg='Frequency for a wavelength of 5m @ 343m/s is 68.6Hz',
+        )
+
+        arguments = [4, 355.0, 'cm']
+        expected = 8875
+
+        self.assertEqual(
+            wavelength_to_frequency(*arguments),
+            expected,
+            msg='Frequency for a wavelength of 4cm @ 355m/s is 8875Hz',
         )
