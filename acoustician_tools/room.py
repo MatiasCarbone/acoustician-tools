@@ -7,22 +7,9 @@ as well as calculating decay times and clarity from impulse-response files.
 
 import numpy as np
 import math
+from acoustician_tools.utils import *
 
-SOUNDSPEED = 343.0  # m/s @ 20°C dry air
-
-
-def sound_speed(temperature: float = 20.0) -> float:
-    """
-    Calculate approximate speed of sound in dry air at a given temperature.
-
-    Parameters:
-        temperature (float): air temperature [°C]
-
-    Returns:
-        c (float): speed of sound [m/s]
-    """
-    c = 331.3 * math.sqrt(1 + (temperature / 273.15))
-    return round(c, ndigits=1)
+SOUNDSPEED = sound_speed(20.0)
 
 
 def rt_constant(sound_speed: float = SOUNDSPEED, decay_db: int = 60) -> float:

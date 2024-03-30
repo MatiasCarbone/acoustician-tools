@@ -21,10 +21,6 @@ class TestRoom(unittest.TestCase):
         self.volume = np.prod(self.dimensions)
         self.surfaces = shoebox_surfaces(*self.dimensions)
 
-    def test_sound_speed(self):
-        expected = 343.21
-        self.assertAlmostEqual(sound_speed(20.0), expected, places=1)
-
     def test_rt_constant(self):
         sound_speed = 343.0
         expected = 0.161
