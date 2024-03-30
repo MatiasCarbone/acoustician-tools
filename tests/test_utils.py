@@ -62,3 +62,7 @@ class TestUtils(unittest.TestCase):
             expected,
             msg='Frequency for a wavelength of 4cm @ 355m/s is 8875Hz',
         )
+
+
+if __name__ == '__main__':
+    unittest.main()
