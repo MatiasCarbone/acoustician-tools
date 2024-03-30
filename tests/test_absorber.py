@@ -26,6 +26,23 @@ class TestAbsorber(unittest.TestCase):
         with self.assertRaises(Exception, msg='Incorrect list length'):
             nrc(alphas)
 
+    def test_porous_absorber(self):
+        expected = [0.13, 0.49, 0.95, 0.96, 0.99]
+        calculated = porous_absorber(
+            flow_resistivity=10100,
+            thickness=100,
+            frequencies=[100, 200, 500, 1000, 2000],
+        )
+        np.testing.assert_almost_equal(expected, calculated, decimal=2)
+
+        expected = [0.04, 0.17, 0.4, 0.65, 0.77, 0.88, 0.96]
+        calculated = porous_absorber(
+            flow_resistivity=45000,
+            thickness=71,
+            frequencies=[50, 100, 200, 500, 1000, 2000, 4000],
+        )
+        np.testing.assert_almost_equal(expected, calculated, decimal=2)
+
 
 if __name__ == '__main__':
     unittest.main()

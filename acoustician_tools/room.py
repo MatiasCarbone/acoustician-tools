@@ -6,7 +6,7 @@ as well as calculating decay times and clarity from impulse-response files.
 """
 
 import numpy as np
-import math
+
 from acoustician_tools.utils import *
 
 SOUNDSPEED = sound_speed(20.0)
