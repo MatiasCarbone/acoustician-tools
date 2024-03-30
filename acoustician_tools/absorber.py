@@ -6,6 +6,10 @@ This module contains function for calculating acoustic parameters of absorbers a
 
 import numpy as np
 import math
+from acoustician_tools.utils import sound_speed, air_density
+
+SOUNDSPEED = sound_speed(20.0)
+AIR_DENSITY = air_density(20.0, 1013)
 
 
 def nrc(alphas: list) -> float:

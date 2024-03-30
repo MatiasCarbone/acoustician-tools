@@ -63,6 +63,15 @@ class TestUtils(unittest.TestCase):
             msg='Frequency for a wavelength of 4cm @ 355m/s is 8875Hz',
         )
 
+    def test_air_density(self):
+        arguments = [20.0, 1.013]
+        expected = 1.204
+        self.assertAlmostEqual(air_density(*arguments), expected, places=3)
+
+        arguments = [0.0, 1.000]
+        expected = 1.275
+        self.assertAlmostEqual(air_density(*arguments), expected, places=3)
+
 
 if __name__ == '__main__':
     unittest.main()

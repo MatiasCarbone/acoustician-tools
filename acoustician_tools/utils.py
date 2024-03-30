@@ -59,6 +59,22 @@ def sound_speed(temperature: float = 20.0) -> float:
     return round(c, ndigits=1)
 
 
+def air_density(temperature: float = 20.0, pressure: float = 1.013) -> float:
+    """
+    Calculate density of dry air (0% relative humidity).
+
+    Parameters:
+        temperature (float): [°C]
+        pressure (float): [bar]
+
+    Returns:
+        density (float): [kg/m3]
+    """
+    gas_constant = 287.058
+    density = (pressure * 100000) / (gas_constant * (temperature + 273.15))
+    return density
+
+
 def shoebox_surfaces(length: float, width: float, height: float) -> list:
     """
     Get list of each boundary's surface for a shoebox room with defined dimensions.
