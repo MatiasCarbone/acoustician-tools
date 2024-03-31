@@ -5,6 +5,7 @@ This module contains function for calculating acoustic parameters of absorbers a
 """
 
 import numpy as np
+import math
 from acoustician_tools.utils import sound_speed, air_density
 
 SOUNDSPEED = sound_speed(20.0)
@@ -34,53 +35,61 @@ def nrc(alphas: list) -> float:
         return nrc
 
 
-def porous_absorber(
-    flow_resistivity: float,
+def porous_absorber_alpha(
     thickness: float,
+    flow_resistivity: int,
     frequencies: list = range(100, 20001, 50),
     c: float = 343,
     air_density: float = 1.204,
 ):
     """
-    Calculate the absortion coefficients of a layer of porous absorber agains a rigid baking with no
-    air gap and normal incidence, at one or more individual frequencies.
-
-    The calculations are performed using Delany and Bazley equations for impedance and wave number,
-    following the instructions and formulas presented in
-        'Trevor J. Cox and Peter D'Antonio. 2009.
-        Acoustic Absorbers and Diffusers: Theory, design and application,
-        2nd Edition. Taylor & Francis.'
-
-    Parameters:
-        flow_resistivity (float) [Pa.s/m2]
-        thickness (float): total material thickness [mm]
-        frequencies (float or list): one or more individual frequencies (not bands) [Hz]
-            for absortion coefficient to be calculated at
-        c (float): speed of sound [m/s]
-        air_density (float) [kg/m3]
-
-    Returns:
-        alpha (np.array): array containing alpha coefficients for each frequency [0-1]
+    doi.org/10.1016/j.apacoust.2013.06.004
     """
+
+    # Cotangent
+    def cot(x):
+        return 1 / np.tan(x)
+
+    # Hyperbolic-cotangent
+    def coth(x):
+        return np.cosh(x) / np.sinh(x)
+
     # Convert frequencies to array
-    f_list = np.asarray(frequencies)
+    f = np.array(frequencies)
 
-    z0 = c * air_density  # Characteristic impedance of air
+    # Characteristic impedance of air [Pa.s/m2]
+    z0 = c * air_density
 
-    # Delany and Bazley calculation for impedance and wave number
-    x = air_density * f_list / flow_resistivity  # Dimensionless quantity
-    zc = air_density * c * (1 + 0.0571 * (x**-0.754) - 1j * 0.087 * (x**-0.732))  # Characteristic impedance of material
-    k = (2 * np.pi / c) * f_list * (1 + 0.0978 * (x**-0.700) - 1j * 0.189 * (x**-0.595))  # Complex wave number
+    # Parameter for calculating Z and Gamma of absorbent layer [dimensionless]
+    x = air_density * f / flow_resistivity
 
-    # Absortion coefficients calculation
-    l = thickness * 0.001  # Material thickness converted to meters
-    z = -1j * zc * (1 / np.tan(k * l))  # Surface impedance
-    r = (z - z0) / (z + z0)  # Reflection factor
-    alpha = 1 - np.abs(r) ** 2  # Absortion coefficient at normal incidence
+    # --------------------- Allard-Champoux calculations for z1 -------------------- #
+    # Dynamic density for absorption layer [kg.m3]
+    p = 1.2 + (-0.0364 * (x**-2) - 1j * 0.1144 * (x**-1)) ** 0.5
 
-    # TODO: implement parameters for returning other acoustic parameters.
-    return alpha
+    # Dynamic bulk modulus
+    k = (
+        101320
+        * (1j * 29.64 + (2.82 * (x**-2) + 1j + 24.9 * (x**-1)) ** 0.5)
+        / (1j * 21.17 + (2.82 + (x**2) + 1j * 24.9 * (x**-1)) ** 0.5)
+    )
 
+    # Characteristic impedance of absorption layer
+    z1 = (p * k) ** 0.5
 
-def porous_absorber_airgap():
-    pass
+    # Propagation constant for absorption layer
+    gamma1 = 1j * 2 * np.pi * f * (p / k) ** 0.5
+
+    # ----------------------- Transfer-Matrix Calculations ------------------------ #
+    d1 = thickness * 0.001  # Thickness converted to meters
+    zs2 = 1j * np.inf  # Surface impedance of rigid backwall !!!!!!!!!!!
+
+    # Surface impedance for absorber layer
+    zs1 = (z1 * zs2 * coth(gamma1 * d1) + (z1**2)) / (zs2 + z1 * coth(gamma1 * d1))
+
+    # -------------------------- Absorption coefficient -------------------------- #
+    # Complex reflection factor of system [dimensionless]
+    r = (zs1 - z0) / (zs1 + z0)
+
+    # Absorption coefficient at normal incidence
+    alpha = 1 - np.abs(r) ** 2
