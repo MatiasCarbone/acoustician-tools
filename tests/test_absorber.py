@@ -43,6 +43,33 @@ class TestAbsorber(unittest.TestCase):
         )
         np.testing.assert_almost_equal(expected, calculated, decimal=2)
 
+    def test_helmholtz_frequency(self):
+        expected = 240.092
+        calculated = helmholtz_resonant_frequency(
+            opening_diameter=(10 * 2),
+            opening_length=20,
+            cavity_dimensions=[40, 500],
+            opening_shape='circle',
+            cavity_shape='cylinder',
+            end_correction=0.3,
+            c=344,
+        )
+
+        self.assertEqual(calculated, expected)
+
+        expected = 103.879
+        calculated = helmholtz_resonant_frequency(
+            opening_diameter=(30),
+            opening_length=50,
+            cavity_dimensions=[100, 500],
+            opening_shape='square',
+            cavity_shape='prism',
+            end_correction=0.0,
+            c=344,
+        )
+
+        self.assertEqual(calculated, expected)
+
 
 if __name__ == '__main__':
     unittest.main()

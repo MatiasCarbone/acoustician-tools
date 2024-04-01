@@ -5,7 +5,7 @@ This module contains function for calculating acoustic parameters of absorbers a
 """
 
 import numpy as np
-from acoustician_tools.utils import sound_speed, air_density
+from acoustician_tools.utils import sound_speed, air_density, coth, cot
 
 SOUNDSPEED = sound_speed(20.0)
 AIR_DENSITY = air_density(20.0, 1013)
@@ -82,5 +82,57 @@ def porous_absorber(
     return alpha
 
 
-def porous_absorber_airgap():
-    pass
+def helmholtz_resonant_frequency(
+    opening_diameter: float,
+    opening_length: float,
+    cavity_dimensions: list,
+    end_correction: float = 0.3,
+    opening_shape: str = 'circle',
+    cavity_shape: str = 'cylinder',
+    c: float = 343,
+):
+    """
+    Calculate the resonant frequency of a Helmholtz resonator with circle or square opening shape and
+    cylindrical or prismatic cavity shape.
+
+    Parameters:
+        opening_diameter (float): Dimensions of the hole, diameter in case of circular hole [mm]
+            or side in case of square hole
+        opening_length (float): Length of the hole (neck) [mm]
+        cavity_dimensions (list): Dimensions for the inner cavity. List of two float values; [mm, mm]
+            first corresponds to diameter (side in case of a prismatic cavity) and second
+            corresponds to depth of the cavity
+        end_correction (float): Correction accounting for waves forming before the start of a
+            tube; usually 0.3 for pipes with one opening and 0.6 for pipes with two
+        c (float): Speed of sound [m/s]
+
+    Return:
+        f (float): Resonant frequency of the system [Hz]
+    """
+
+    # Calculate area of the opening for circle or square shape
+    match opening_shape:
+        case 'circle':
+            a = np.pi * ((opening_diameter / 2) ** 2)
+        case 'square':
+            a = opening_diameter**2
+        case _:
+            raise Exception('The only valid opening shapes for this calculation as square and circle.')
+    # Calculate volume of the cavity for cylinder or prism shape
+    match cavity_shape:
+        case 'cylinder':
+            v = np.pi * ((cavity_dimensions[0] / 2) ** 2) * cavity_dimensions[1]
+        case 'prism':
+            v = (cavity_dimensions[0] ** 2) * cavity_dimensions[1]
+        case _:
+            raise Exception('The only valid cavity shapes for this calculation as cylinder and prism.')
+
+    l = opening_length + end_correction * opening_diameter  # Length + optional end-correction [m]
+
+    # Convert units to meters
+    a = a * (10**-6)
+    l = l * (10**-6)
+    v = v * (10**-6)
+
+    f = (c / (2 * np.pi)) * np.sqrt(a / (v * l))  # Resonant frequency [Hz]
+    return np.round(f, decimals=3)
