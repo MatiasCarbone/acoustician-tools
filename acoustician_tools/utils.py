@@ -93,3 +93,11 @@ def shoebox_surfaces(length: float, width: float, height: float) -> list:
 
     surfaces = [sidewalls, sidewalls, front_rear, front_rear, roof_ceil, roof_ceil]
     return surfaces
+
+
+def cot(x):
+    return 1 / np.tan(x)
+
+
+def coth(x):
+    return np.cosh(x) / np.sinh(x)
