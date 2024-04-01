@@ -1,7 +1,7 @@
 """
 ABSORBER
 
-This module contains function for calculating acoustic parameters of absorbers and materials.
+This module contains functions for calculating acoustic parameters of absorbers and materials.
 """
 
 import numpy as np
@@ -72,7 +72,7 @@ def porous_absorber(
     zc = air_density * c * (1 + 0.0571 * (x**-0.754) - 1j * 0.087 * (x**-0.732))  # Characteristic impedance of material
     k = (2 * np.pi / c) * f_list * (1 + 0.0978 * (x**-0.700) - 1j * 0.189 * (x**-0.595))  # Complex wave number
 
-    # Absortion coefficients calculation
+    # Absorption coefficients calculation
     l = thickness * 0.001  # Material thickness converted to meters
     z = -1j * zc * (1 / np.tan(k * l))  # Surface impedance
     r = (z - z0) / (z + z0)  # Reflection factor
