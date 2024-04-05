@@ -15,18 +15,34 @@ def qrd_diffuser_parameters(
     sep_w: float,
     n: int,
     m: int = 0,
-    width: float = 47,
+    width: float = None,
     inverse: bool = False,
     c: float = 343,
 ):
-    # Convert frequency to wavelength [m]
-    lambda_design = frequency_to_wavelength(f_design, c)
+    """
+    Calculate various acoustic and construction parameters for a quadratic-residue diffuser
+    based on a design frequency and a prime number generator.
+
+    Parameters:
+        f_design (float): Design frequency for the diffuser calculation; [Hz]
+            it's usually the lowest frequency with effective diffusion
+        sep_w (float): Width of separator fins [mm]
+        n (int): Prime generator for quadratic-residue sequence, must be a
+            prime number larger than 1
+        m (int): Constant added to the quadratic-residue calculation for
+            shifting the sequence phase, allowing to find a configuration
+            with reduced build depth for the same design frequency
+        width (float): Custom width for each well of the diffuser; [mm]
+            if used, will override the optimal width calculations
+        inverse (bools): Allow the calculation of inverse diffuser panels
+        c (float): Speed of sound [m/s]
+    """
+    lambda_design = frequency_to_wavelength(f_design, c)  # [m]
 
     # Generate quadratic-residue sequence
     range = np.arange(0, n, 1)
     sequence = ((range**2) + m) % n
 
-    # Inverse panel calculation
     if inverse:
         sequence = n - sequence
 
@@ -50,7 +66,6 @@ def qrd_diffuser_parameters(
     else:
         w = np.round(lambda_design * 0.137 * 1000, decimals=2)
 
-    # Warnings for exceeding width dimensions
     if w < w_min:
         print(f'WARNING!: The selected width value is below the minimum value of {w_min}mm. Beware of viscous losses.')
     elif w > w_max:
@@ -66,10 +81,8 @@ def qrd_diffuser_parameters(
     else:
         f_low = f_design
 
-    # High-frequency limit (normal angle)
-    f_high = int(wavelength_to_frequency((w * 2) / 1000, c))
-
     # High-frequency limit at various angles
+    f_high = int(wavelength_to_frequency((w * 2) / 1000, c))
     angles = np.arange(0, 91, 15)
     angles_radians = angles * (np.pi / 180)
     f_high_angles = np.ceil(f_high * np.sin(abs((90 * (np.pi / 180)) - angles_radians)))
