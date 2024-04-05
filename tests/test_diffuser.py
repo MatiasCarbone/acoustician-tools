@@ -13,6 +13,7 @@ class TestDiffuser(unittest.TestCase):
         expected = {
             'design_frequency': 1000,
             'generator': '7+0',
+            'inverse': False,
             'low_frequency_diffusion_limit': 1000,
             'low_frequency_scatter_limit': 500,
             'high_cutoff_frequency': {
@@ -31,5 +32,5 @@ class TestDiffuser(unittest.TestCase):
             'period_width': 350,
             'critical_distance': 1.03,
         }
-        calculated = qrd_diffuser_parameters(f_design=1000, sep_w=3, n=7, m=0, c=343)
+        calculated = qrd_diffuser_parameters(f_design=1000, sep_w=3, n=7, m=0, inverse=False, c=343)
         self.assertDictEqual(calculated, expected)
