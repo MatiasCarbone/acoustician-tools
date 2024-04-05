@@ -16,6 +16,7 @@ def qrd_diffuser_parameters(
     n: int,
     m: int = 0,
     width: float = 47,
+    inverse: bool = False,
     c: float = 343,
 ):
     # Convert frequency to wavelength [m]
@@ -24,6 +25,10 @@ def qrd_diffuser_parameters(
     # Generate quadratic-residue sequence
     range = np.arange(0, n, 1)
     sequence = ((range**2) + m) % n
+
+    # Inverse panel calculation
+    if inverse:
+        sequence = n - sequence
 
     # Calculate depth for each well in the sequence [mm]
     d = np.round(((sequence * lambda_design) / (2 * n)) * 1000, decimals=2)
@@ -79,6 +84,7 @@ def qrd_diffuser_parameters(
     params = {
         'design_frequency': f_design,
         'generator': f'{n}+{m}',
+        'inverse': inverse,
         'low_frequency_diffusion_limit': f_low,
         'low_frequency_scatter_limit': int(f_low / 2),
         'high_cutoff_frequency': f_high_dict,
