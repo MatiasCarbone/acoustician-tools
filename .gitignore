@@ -164,3 +164,4 @@ tests/test.ipynb
 
 # VSCode stuff
 /.vscode
+tests/IR_test.txt
