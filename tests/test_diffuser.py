@@ -120,3 +120,7 @@ class TestDiffuser(unittest.TestCase):
         }
         calculated = qrd_diffuser_parameters(f_design=357, sep_w=2, n=17, m=3, inverse=True, c=343)
         self.assertDictEqual(calculated, expected)
+
+
+if __name__ == '__main__':
+    unittest.main()
