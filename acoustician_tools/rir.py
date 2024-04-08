@@ -12,8 +12,22 @@ from acoustician_tools.filter import butter_bandpass, butter_bandpass_filter
 
 
 def rt60_from_ir(path: str, bands: list, estimator: str = 't30'):
+    """
+    Get RT60 from a .wav impulse-response file.
+
+    Parameters:
+        path (string): Path to file. Must be a .wav audio file containing
+            an impulse-response. Can be any bit sample-rate and bit depth
+        bands (list): List of tuples, containing frequency bands (lower, upper). [Hz]
+            Usually, RT60 is calculated using octave or third-octave bands
+        estimator (string): Measurement range to be used to determine the RT60 using
+            only a limited dynamic-range. [edt, t20, t30, t60]
+
+    Returns:
+        rt60 (list): List containing RT60 values for each frequency band [s]
+    """
     sr, ir_signal = wavfile.read(path)
-    rt = []
+    rt60 = []
 
     # Get reference decay points based on selected estimator
     estimator = str.lower(str(estimator))
@@ -56,6 +70,6 @@ def rt60_from_ir(path: str, bands: list, estimator: str = 't30'):
         # Calculate time multiplying linear regression
         regress_start = (drop[0] - intercept) / slope
         regress_end = (drop[1] - intercept) / slope
-        rt.append(multiplier * (regress_end - regress_start))
+        rt60.append(multiplier * (regress_end - regress_start))
 
-    return rt
+    return rt60
