@@ -31,7 +31,8 @@ def rt60_from_ir(path: str, bands: list, estimator: str = 't30'):
             drop = (-5, -35)
             multiplier = 2
         case 't60':
-            pass
+            drop = (-5, -65)
+            multiplier = 1
         case _:
             raise TypeError('Invalid estimator. Only valid options are "edt", "t10", "t20", "t30" and "t60".')
 
@@ -47,10 +48,12 @@ def rt60_from_ir(path: str, bands: list, estimator: str = 't30'):
         a = np.where(sch_db <= drop[0])[0][0]
         b = np.where(sch_db <= drop[1])[0][0]
 
+        # Linear regression for segment of interest
         sch_db_slice = sch_db[a:b]
         t = np.linspace(0, (len(sch_db_slice) / sr), len(sch_db_slice))
         slope, intercept = linregress(t, sch_db_slice)[:2]
 
+        # Calculate time multiplying linear regression
         regress_start = (drop[0] - intercept) / slope
         regress_end = (drop[1] - intercept) / slope
         rt.append(multiplier * (regress_end - regress_start))
