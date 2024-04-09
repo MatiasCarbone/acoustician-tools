@@ -39,6 +39,34 @@ def clarity_from_ir(path: str, bands: list, t_early: int = 50):
     return np.round(clarity, decimals=6).tolist()
 
 
+def definition_from_ir(path: str, bands: list, t_early: int = 50):
+    """
+    Calculate definition parameter from an impulse-response in .wav format.
+
+    Parameters:
+        path (string): Path to file. Must be a .wav audio file containing
+            an impulse-response. Can be any bit sample-rate and bit depth
+        bands (list): List of tuples, containing frequency bands (lower, upper) [Hz]
+        t_early (int): Early time limit for early/total energy; [ms]
+            (50ms for D50 and 80ms for D80 standards)
+
+    Returns:
+        definition (list): List containing definition values for each band
+    """
+    sr, y = wavfile.read(path)
+    start = np.where(y > 0)[0][0]  # First non-zero value
+    y = y[start:]  # Remove leading zeroes
+    t = int((t_early / 1000) * sr)
+
+    definition = []
+    for b in bands:
+        y_filter = butter_bandpass_filter(y, b[0], b[1], sr, order=5)  # Bandpassed signal
+        y_sq = y_filter**2
+        d = 10 * np.log10(np.sum(y_sq[:t]) / np.sum(y_sq))
+        definition.append(d)
+    return np.round(definition, decimals=6).tolist()
+
+
 def rt60_from_ir(path: str, bands: list, estimator: str = 't30'):
     """
     Get RT60 from a .wav impulse-response file.

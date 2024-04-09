@@ -116,7 +116,40 @@ class TestRIR(unittest.TestCase):
             31.230428,
         ]
         calculated = clarity_from_ir('tests/IR/IR_test.wav', third_octave_bands()['f_bound'], 80)
-        np.testing.assert_almost_equal(calculated, expected, decimal=5, err_msg='C80 Octave Bands - Hall IR')
+        np.testing.assert_almost_equal(calculated, expected, decimal=5, err_msg='C80 Third-Octave Bands - Hall IR')
+
+    def test_definition_from_ir(self):
+        expected = [
+            -14.352509,
+            -9.35315,
+            -7.345146,
+            -6.349633,
+            -6.326782,
+            -6.448922,
+            -6.526858,
+            -6.500857,
+            -6.442136,
+            -7.81512,
+            -3.940382,
+        ]
+        calculated = definition_from_ir('tests/IR/IR_test_big_hall.wav', octave_bands()['f_bound'], 80)
+        np.testing.assert_almost_equal(calculated, expected, decimal=5, err_msg='D80 Octave Bands - Hall IR')
+
+        expected = [
+            -21.823519,
+            -17.315967,
+            -3.008248,
+            -4.775285,
+            -1.788581,
+            -0.924991,
+            -1.516836,
+            -0.737632,
+            -0.652174,
+            -0.389155,
+            -0.070473,
+        ]
+        calculated = definition_from_ir('tests/IR/IR_test.wav', octave_bands()['f_bound'], 50)
+        np.testing.assert_almost_equal(calculated, expected, decimal=5, err_msg='D50 Octave Bands - Room IR')
 
 
 if __name__ == '__main__':
