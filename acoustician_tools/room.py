@@ -12,6 +12,21 @@ from acoustician_tools.utils import *
 SOUNDSPEED = sound_speed(20.0)
 
 
+def schroeder_frequency(t30: float, v: float):
+    """
+    Schroeder frequency (aka. transition frequency) calculation.
+
+    Parameters:
+        t30 (float): RT60 decay rime (measured as T30) [s]
+        v (float): Volume of the room [m3]
+
+    Returns:
+        fs (float): Schroeder frequency [Hz]
+    """
+    fs = 2000 * np.sqrt(t30 / v)
+    return round(fs, ndigits=2)
+
+
 def rt_constant(sound_speed: float = SOUNDSPEED, decay_db: int = 60) -> float:
     """
     Calculate RT constant to be used in reverberation formulas.

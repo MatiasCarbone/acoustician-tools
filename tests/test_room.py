@@ -99,6 +99,11 @@ class TestRoom(unittest.TestCase):
             decimal=2,
         )
 
+    def test_schroeder_frequency(self):
+        expected = 346.41
+        calculated = schroeder_frequency(1.2, 40)
+        self.assertEqual(calculated, expected, msg='Schroeder Frequency for 40m3 room with 1.2s RT60.')
+
 
 if __name__ == '__main__':
     unittest.main()
