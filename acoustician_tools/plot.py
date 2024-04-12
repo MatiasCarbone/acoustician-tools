@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 def waterfall_fft_plot(
     path: str,
-    time_range: int = 2000,
+    time_range: int = 1000,
     slices: int = 10,
     window_length: int = 1024,
     window_shape: tuple = (0.25, 1.0),
@@ -30,7 +30,7 @@ def waterfall_fft_plot(
     window = np.append(win_left, win_right)
 
     # Define stride and starting point for moving the window
-    time_range_samples = int(300 * 0.001 * sr)
+    time_range_samples = int(time_range * 0.001 * sr)
     stride = int(time_range_samples / (slices - 1))  # capaz -1
     start = int(peak - ((window_length / 2) * window_shape[0]))
 
