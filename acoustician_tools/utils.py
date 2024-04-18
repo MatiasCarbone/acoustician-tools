@@ -101,3 +101,39 @@ def cot(x):
 
 def coth(x):
     return np.cosh(x) / np.sinh(x)
+
+
+def polar_to_cartesian(r, theta, degrees=True):
+    """
+    Convert polar coordinates to cartesian coordinates.
+
+    Parameters:
+        r (float): Radius
+        theta (float): Angle [degrees/radians]
+        degrees (bool): Allows selection of units for input
+
+    Returns:
+        x, y (tuple): Cartesian coordinates
+    """
+    if degrees:
+        theta *= np.pi / 180
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+
+    return (x, y)
+
+
+def cartesian_to_polar(x, y):
+    """
+    Convert cartesian coordinates to polar.
+
+    Parameters:
+        x, y (float): Cartesian coordinates
+
+    Returns:
+        r, theta (tuple): Polar coordinates, [theta -> radians]
+    """
+    r = np.sqrt((x**2) + (y**2))
+    theta = (np.tan**-1) * (y / x)
+
+    return (r, theta)
